@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruiyun.event.mapper.TblAppInfoMapper">
+
+	<resultMap id="TblappInfo" type="com.ruiyun.event.bean.TblAppInfo">
+		<result column="app_name" property="app_name"  />
+		<result column="app_module" property="app_module" />
+		<result column="event_type" property="event_type"  />
+	</resultMap>
+
+ 	 <insert id="insertAppInfo" parameterType="com.ruiyun.event.bean.TblAppInfo">
+        insert into tbl_app_info  (app_name,app_module,event_type) values(#{app_name},#{app_module},#{event_type})
+     </insert>
+ 	 <select id="queryAllAppInfo"   resultType="com.ruiyun.event.bean.TblAppInfo">
+         select * from tbl_app_info 
+     </select>
+	<select id="queryAppInfos" parameterType="java.lang.String"  resultType="com.ruiyun.event.bean.TblAppInfo">
+         select * from tbl_app_info where app_name = #{appName}
+     </select>
+     <select id="searchAppInfo" parameterType="com.ruiyun.event.bean.TblAppInfo"  resultType="com.ruiyun.event.bean.TblAppInfo">
+         select * from tbl_app_info where app_name = #{app_name} and app_module = #{app_module} and event_type = #{event_type}
+     </select>
+</mapper>

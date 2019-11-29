@@ -1,0 +1,31 @@
+server:
+  port: 8093 #8181
+  context-path: /
+spring:
+  application:
+    name: ruiyun-business-log
+  datasource:
+    #url: jdbc:mysql://localhost:3306/zentao?characterEncoding=UTF-8
+    url: jdbc:mysql://192.168.1.254:3306/qianniu?useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+  redis:
+    database: 0  
+    host: 127.0.0.1
+    port: 6379  
+    password:   
+    pool:
+      max-active: 8  
+      max-wait: -1  
+      max-idle: 8  
+      min-idle: 0  
+    timeout: 0 
+
+
+
+mybatis:
+  mapperLocations: classpath*:/**/mappers/*mapper.xml 
+#  # spring boot集成mybatis的方式打印sql
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl 

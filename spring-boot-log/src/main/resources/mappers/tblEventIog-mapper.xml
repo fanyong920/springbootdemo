@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruiyun.event.mapper.TblEventLogMapper">
+
+	<resultMap id="TbleventLog" type="com.ruiyun.event.bean.TblEventLog">
+		<id column="event_id" property="event_id"  />
+		<result column="nick" property="nick" />
+		<result column="ip" property="ip"  />
+		<result column="app_name" property="app_name"  />
+		<result column="app_module" property="app_module"  />
+		<result column="event_type" property="event_type"  />
+		<result column="event_desc" property="event_desc"  />
+		<result column="event_time" property="event_time"  />
+		<result column="event_platform" property="event_platform"  />
+		<result column="relate_iids" property="relate_iids"  />
+		<result column="relate_task_id" property="relate_task_id"  />
+	</resultMap>
+
+ 	 <insert id="insertEvent" parameterType="com.ruiyun.event.bean.TblEventLog">
+        insert into  tbl_event_log (event_id,nick,ip,app_name,app_module,event_type,event_desc,event_location,event_platform,relate_iids,relate_task_id)
+        values(#{event_id},#{nick},#{ip},#{app_name},#{app_module},#{event_type},#{event_desc},#{event_location},#{event_platform},#{relate_iids},#{relate_task_id})
+     </insert>
+ 	 <select id="searchEvents" parameterType="com.ruiyun.event.bean.SearchInfo"   resultType="com.ruiyun.event.bean.TblEventLog">
+         select event_id,nick,ip,app_name,app_module,event_type,event_desc,event_time,event_location,event_platform,relate_iids,relate_task_id
+          from tbl_event_log as log where
+          <if test="nick != '' and nick != null">
+          	<bind name="nickPattern" value=" nick + '%'" ></bind>
+          		 nick like #{nickPattern}
+          </if>
+          <if test="app_name != '' and app_name != null"> and app_name = #{app_name}</if>
+          <if test="app_module != '' and app_module != null">and app_module = #{app_module}</if>
+          <if test="event_type != '' and event_type != null">and event_type = #{event_type}</if>
+          <if test="startTime != '' and startTime != null">and event_time &gt; #{startTime}</if>
+          <if test="endTime != '' and endTime != null">and event_time &lt; #{endTime}</if>
+          <if test="searchIid != null and searchIid != ''">
+	         and concat_ws(',',log.relate_iids,log.relate_task_id) like #{searchIid}
+          </if>
+          order by event_time desc limit #{startNum},#{pageSize}
+     </select>
+     
+     <select id="searchEventsCount" parameterType="com.ruiyun.event.bean.SearchInfo"   resultType="java.lang.Integer">
+         select count(1) from tbl_event_log as log where
+          <if test="app_name != '' and app_name != null">app_name = #{app_name}</if>
+          <if test="app_module != '' and app_module != null">and app_module = #{app_module}</if>
+          <if test="event_type != '' and event_type != null">and event_type = #{event_type}</if>
+          <if test="startTime != '' and startTime != null">and event_time &gt; #{startTime}</if>
+          <if test="endTime != '' and endTime != null">and event_time &lt; #{endTime}</if>
+          <if test="nick != '' and nick != null">and nick = #{nick}</if>
+           <if test="searchIid != null and searchIid != ''">
+	        and   concat_ws(',',log.relate_iids,log.relate_task_id) like #{searchIid}
+          </if>
+     </select>
+
+</mapper>
