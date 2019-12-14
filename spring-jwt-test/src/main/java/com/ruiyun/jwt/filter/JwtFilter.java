@@ -2,6 +2,7 @@ package com.ruiyun.jwt.filter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -10,8 +11,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.util.StringUtils;
+
+import com.ruiyun.jwt.util.JwtTokenUtil;
 
 /**
  * jwt filter
@@ -28,19 +32,38 @@ public class JwtFilter implements Filter {
 		
 		HttpServletRequest httpRequest = (HttpServletRequest)request;
 		PrintWriter writer = response.getWriter();
-		String authHeader = httpRequest.getHeader("Authorization");
-		
-		if(StringUtils.isEmpty(authHeader)) {
-			writer.write("missing auth header");
-			writer.close();
-			return;
+		String token = JwtTokenUtil.getCookie(httpRequest,"Authorization");
+		String requestURI = httpRequest.getRequestURI();
+
+		if( "/".equals(requestURI)){
+			chain.doFilter(request, response);
+		}else{
+			
+				if(StringUtils.isEmpty(token)) {
+					writer.write("missing auth header ");
+					writer.close();
+					return;
+				}else{
+					if(!token.startsWith("Bearer")) {
+						writer.write("auth header is invalid");
+						writer.close();
+						return;
+					}
+					
+					String name = JwtTokenUtil.getCookie(httpRequest,"name");
+					if(JwtTokenUtil.Validate(token, name)){
+						chain.doFilter(request, response);
+					}else{
+						writer.write("auth header is invalid");
+						writer.close();
+						return;
+					}
+				}
+				
+				
 		}
 		
-		if(!authHeader.startsWith("Bearer")) {
-			writer.write("auth header is invalid");
-			writer.close();
-			return;
-		}
+		
 		
 		
 		
