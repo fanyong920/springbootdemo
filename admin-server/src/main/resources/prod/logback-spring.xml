@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+    <contextName>sunwayind</contextName><!-- 指定日志输出的上下文名称 -->
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <property name="logback.logdir" value="./logs" />
+    <property name="logback.appname" value="device-micro" />
+    <appender name="consoleLog" class="ch.qos.logback.core.ConsoleAppender"><!--输出到控制台 ConsoleAppender -->
+        <!--展示格式 layout -->
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度 %msg：日志消息，%n是换行符 -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%contextName] [${logback.appname}] [%thread] %-5level %logger{36} - %msg%n
+            </pattern>
+        </layout>
+    </appender>
+    <appender name="infoLog"
+              class="ch.qos.logback.core.rolling.RollingFileAppender"><!--输出到文件 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 如果只想要某个级别的日志，使用 ThresholdFilter来进行过滤-->
+            <level>INFO</level><!-- 想要的日志级别 -->
+            <onMatch>ACCEPT</onMatch><!-- 匹配到就禁止 -->
+            <onMismatch>DENY</onMismatch><!--没有匹配到就允许-->
+        </filter>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!-- 此处设置字符集 -->
+            <charset>UTF-8</charset>
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度 %msg：日志消息，%n是换行符 -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%contextName] [${logback.appname}][%thread] %-5level %logger{36}- %msg%n
+            </pattern>
+        </encoder>
+        <File>${logback.logdir}/info.log</File><!-- 指定文件位置及名字 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"><!-- 滚动策略，按照时间滚动 -->
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度 %msg：日志消息，%n是换行符 -->
+            <FileNamePattern>${logback.logdir}/info.${logback.appname}.%d{yyyy-MM-dd}.log
+            </FileNamePattern><!-- 指定文件位置及名字 -->
+            <maxHistory>30</maxHistory><!--保留近30天的日志 -->
+            <totalSizeCap>300MB</totalSizeCap><!--用来指定日志文件的上限大小，那么到了这个值，就会删除旧的日志 -->
+        </rollingPolicy>
+    </appender>
+    <appender name="warnLog"
+              class="ch.qos.logback.core.rolling.RollingFileAppender"><!--输出到文件 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch><!-- 没匹配到就禁止 -->
+            <onMismatch>DENY</onMismatch><!--没有匹配到就允许-->
+        </filter>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!-- 此处设置字符集 -->
+            <charset>UTF-8</charset>
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度 %msg：日志消息，%n是换行符 -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%contextName] [${logback.appname}][%thread] %-5level %logger{36} - %msg%n
+            </pattern>
+        </encoder>
+        <File>${logback.logdir}/warn.log</File><!-- 指定文件位置及名字 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"><!-- 滚动策略，按照时间滚动 -->
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度 %msg：日志消息，%n是换行符 -->
+            <FileNamePattern>${logback.logdir}/warn.${logback.appname}.%d{yyyy-MM-dd}.log
+            </FileNamePattern><!-- 指定文件位置及名字 -->
+            <maxHistory>30</maxHistory><!--保留近30天的日志 -->
+            <totalSizeCap>300MB</totalSizeCap><!--用来指定日志文件的上限大小，那么到了这个值，就会删除旧的日志 -->
+        </rollingPolicy>
+    </appender>
+    <appender name="errorLog"
+              class="ch.qos.logback.core.rolling.RollingFileAppender"><!--输出到文件 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!-- 此处设置字符集 -->
+            <charset>UTF-8</charset>
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度 %msg：日志消息，%n是换行符 -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%contextName] [${logback.appname}] [%thread] %-5level %logger{36} - %msg%n
+            </pattern>
+        </encoder>
+        <File>${logback.logdir}/error.log</File><!-- 指定文件位置及名字 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"><!-- 滚动策略，按照时间滚动 -->
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度 %msg：日志消息，%n是换行符 -->
+            <FileNamePattern>${logback.logdir}/error.${logback.appname}.%d{yyyy-MM-dd}.log
+            </FileNamePattern><!-- 指定文件位置及名字 -->
+            <maxHistory>30</maxHistory><!--保留近30天的日志 -->
+            <totalSizeCap>300MB</totalSizeCap><!--用来指定日志文件的上限大小，那么到了这个值，就会删除旧的日志 -->
+        </rollingPolicy>
+    </appender>
+
+    <!-- <logger name="testlog.schedule.MiniteJob" level="info"
+        additivity="false">
+        <appender-ref ref="consoleLog" />
+    </logger> -->
+    <root level="INFO">  <!-- 指定最基础的日志输出级别 -->
+<!--        <appender-ref ref="consoleLog" />-->
+        <appender-ref ref="infoLog" />
+        <appender-ref ref="warnLog" />
+        <appender-ref ref="errorLog" />
+    </root>
+</configuration>
